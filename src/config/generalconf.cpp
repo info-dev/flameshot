@@ -19,6 +19,10 @@
 #include <QStandardPaths>
 #include <QTextCodec>
 #include <QVBoxLayout>
+#include <qcheckbox.h>
+#include <qcombobox.h>
+#include <qlabel.h>
+#include <string>
 
 GeneralConf::GeneralConf(QWidget* parent)
   : QWidget(parent)
@@ -56,7 +60,9 @@ GeneralConf::GeneralConf(QWidget* parent)
     initAntialiasingPinZoom();
     initUploadHistoryMax();
     initUndoLimit();
+    initImgUploaderPlugin();
     initUploadClientSecret();
+    initInfomediaUserHash();
     initPredefinedColorPaletteLarge();
     initShowSelectionGeometry();
 
@@ -451,6 +457,35 @@ void GeneralConf::initCopyAndCloseAfterUpload()
     });
 }
 
+void GeneralConf::initImgUploaderPlugin()
+{
+    auto* box = new QGroupBox(tr("Image Upload Storage"));
+    box->setFlat(true);
+    m_layout->addWidget(box);
+
+    auto* extensionLayout = new QVBoxLayout();
+    box->setLayout(extensionLayout);
+
+    m_imgUploaderPlugin = new QComboBox(this);
+
+    QStringList storageList;
+    storageList.append("imgur");
+    storageList.append("infomedia");
+    m_imgUploaderPlugin->addItems(storageList);
+
+    int currentIndex =
+      m_imgUploaderPlugin->findText(ConfigHandler().imgUploaderPlugin());
+    m_imgUploaderPlugin->setCurrentIndex(currentIndex);
+
+    connect(m_imgUploaderPlugin,
+            static_cast<void (QComboBox::*)(const QString&)>(
+              &QComboBox::currentIndexChanged),
+            this,
+            &GeneralConf::imgUploaderPluginChanged);
+
+    extensionLayout->addWidget(m_imgUploaderPlugin);
+}
+
 void GeneralConf::initSaveAfterCopy()
 {
     m_saveAfterCopy = new QCheckBox(tr("Save image after copy"), this);
@@ -568,14 +603,45 @@ void GeneralConf::initUploadClientSecret()
     vboxLayout->addWidget(m_uploadClientKey);
 }
 
+void GeneralConf::initInfomediaUserHash()
+{
+    auto* box = new QGroupBox(tr("Infomedia User Hash"));
+    box->setFlat(true);
+    m_layout->addWidget(box);
+
+    auto* vboxLayout = new QVBoxLayout();
+    box->setLayout(vboxLayout);
+
+    m_infomediaUserHash = new QLineEdit(this);
+    QString foreground = this->palette().windowText().color().name();
+    m_infomediaUserHash->setStyleSheet(
+      QStringLiteral("color: %1").arg(foreground));
+    m_infomediaUserHash->setText(ConfigHandler().infomediaUserHash());
+    connect(m_infomediaUserHash,
+            &QLineEdit::editingFinished,
+            this,
+            &GeneralConf::infomediaUserHashEdited);
+    vboxLayout->addWidget(m_infomediaUserHash);
+}
+
 void GeneralConf::uploadClientKeyEdited()
 {
     ConfigHandler().setUploadClientSecret(m_uploadClientKey->text());
 }
 
+void GeneralConf::infomediaUserHashEdited()
+{
+    ConfigHandler().setInfomediaUserHash(m_infomediaUserHash->text());
+}
+
 void GeneralConf::uploadHistoryMaxChanged(int max)
 {
     ConfigHandler().setUploadHistoryMax(max);
+}
+
+void GeneralConf::imgUploaderPluginChanged(const QString& storage)
+{
+    ConfigHandler().setImgUploaderPlugin(storage);
 }
 
 void GeneralConf::initUndoLimit()

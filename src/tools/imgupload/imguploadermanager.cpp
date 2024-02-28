@@ -3,19 +3,25 @@
 //
 
 #include "imguploadermanager.h"
+#include "confighandler.h"
+#include "generalconf.h"
 #include <QPixmap>
 #include <QWidget>
 
 // TODO - remove this hard-code and create plugin manager in the future, you may
 // include other storage headers here
 #include "storages/imgur/imguruploader.h"
+#include "storages/infomedia/infomediauploader.h"
 
 ImgUploaderManager::ImgUploaderManager(QObject* parent)
   : QObject(parent)
   , m_imgUploaderBase(nullptr)
 {
     // TODO - implement ImgUploader for other Storages and selection among them
-    m_imgUploaderPlugin = IMG_UPLOADER_STORAGE_DEFAULT;
+    // m_imgUploaderPlugin = IMG_UPLOADER_STORAGE_DEFAULT;
+    m_imgUploaderPlugin = ConfigHandler().imgUploaderPlugin();
+    if (m_imgUploaderPlugin.isEmpty())
+        m_imgUploaderPlugin = IMG_UPLOADER_STORAGE_DEFAULT;
     init();
 }
 
@@ -29,8 +35,15 @@ void ImgUploaderManager::init()
     //    m_qstrUrl = "https://imgur.com/";
     //    m_imgUploaderPlugin = "imgur";
     //}
-    m_urlString = "https://imgur.com/";
-    m_imgUploaderPlugin = "imgur";
+    // m_urlString = "https://imgur.com/";
+    // m_imgUploaderPlugin = "imgur";
+    if (uploaderPlugin().compare("infomedia") == 0) {
+        m_urlString = "https://screenshot.infomedia.com/";
+        m_imgUploaderPlugin = "infomedia";
+    } else {
+        m_urlString = "https://imgur.com/";
+        m_imgUploaderPlugin = "imgur";
+    }
 }
 
 ImgUploaderBase* ImgUploaderManager::uploader(const QPixmap& capture,
@@ -45,9 +58,17 @@ ImgUploaderBase* ImgUploaderManager::uploader(const QPixmap& capture,
     //    m_imgUploaderBase =
     //      (ImgUploaderBase*)(new ImgurUploader(capture, parent));
     //}
-    m_imgUploaderBase = (ImgUploaderBase*)(new ImgurUploader(capture, parent));
-    if (m_imgUploaderBase && !capture.isNull()) {
-        m_imgUploaderBase->upload();
+    // m_imgUploaderBase = (ImgUploaderBase*)(new ImgurUploader(capture,
+    // parent));
+    // if (m_imgUploaderBase && !capture.isNull()) {
+    //     m_imgUploaderBase->upload();
+    // }
+    if (uploaderPlugin().compare("infomedia") == 0) {
+        m_imgUploaderBase =
+          (ImgUploaderBase*)(new InfomediaUploader(capture, parent));
+    } else {
+        m_imgUploaderBase =
+          (ImgUploaderBase*)(new ImgurUploader(capture, parent));
     }
     return m_imgUploaderBase;
 }
