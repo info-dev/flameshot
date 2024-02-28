@@ -26,6 +26,7 @@ jobs:
       QTDIR: ${{ github.workspace }}\build\Qt\${{ matrix.qt_ver }}\${{ matrix.config.qt_arch_install }}\
       # 2022.06.15.1
       #   VCPKG_VERSION: cef0b3ec767df6e83806899fe9525f6cf8d7bc91
+      VCPKG_VERSION: d83f4e9e56bf30ee7417effac3a30ffe74979f80
       VCPKG_PACKAGES: openssl
       OPENSSL_ROOT_DIR: ${{ github.workspace }}\vcpkg\installed\${{ matrix.config.vcpkg_triplet }}\
     strategy:
@@ -86,7 +87,7 @@ jobs:
           vcpkgArguments: ${{env.VCPKG_PACKAGES}}
           vcpkgDirectory: '${{ github.workspace }}\vcpkg'
           appendedCacheKey: ${{ matrix.config.vcpkg_triplet }}
-          #   vcpkgGitCommitId: ${{ env.VCPKG_VERSION }}
+          vcpkgGitCommitId: ${{ env.VCPKG_VERSION }}
           vcpkgTriplet: ${{ matrix.config.vcpkg_triplet }}
 
       - name: Cache Qt
