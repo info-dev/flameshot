@@ -3,6 +3,8 @@
 //
 
 #include "imguploadermanager.h"
+#include "confighandler.h"
+#include "generalconf.h"
 #include <QPixmap>
 #include <QWidget>
 
@@ -56,7 +58,8 @@ ImgUploaderBase* ImgUploaderManager::uploader(const QPixmap& capture,
     //    m_imgUploaderBase =
     //      (ImgUploaderBase*)(new ImgurUploader(capture, parent));
     //}
-    // m_imgUploaderBase = (ImgUploaderBase*)(new ImgurUploader(capture, parent));
+    // m_imgUploaderBase = (ImgUploaderBase*)(new ImgurUploader(capture,
+    // parent));
     // if (m_imgUploaderBase && !capture.isNull()) {
     //     m_imgUploaderBase->upload();
     // }
