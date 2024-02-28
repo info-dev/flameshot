@@ -43,6 +43,7 @@ private slots:
     void allowMultipleGuiInstancesChanged(bool checked);
     void autoCloseIdleDaemonChanged(bool checked);
     void autostartChanged(bool checked);
+    void infomediaUserHashEdited();
     void historyConfirmationToDelete(bool checked);
     void uploadHistoryMaxChanged(int max);
     void undoLimit(int limit);
@@ -53,6 +54,7 @@ private slots:
     void resetConfiguration();
     void togglePathFixed();
     void uploadClientKeyEdited();
+    void imgUploaderPluginChanged(const QString& storage);
     void useJpgForClipboardChanged(bool checked);
     void setSaveAsFileExtension(const QString& extension);
     void setGeometryLocation(int index);
@@ -69,11 +71,13 @@ private:
 #if !defined(DISABLE_UPDATE_CHECKER)
     void initCheckForUpdates();
 #endif
+    void initInfomediaUserHash();
     void initConfigButtons();
     void initCopyAndCloseAfterUpload();
     void initCopyOnDoubleClick();
     void initCopyPathAfterSave();
     void initHistoryConfirmationToDelete();
+    void initImgUploaderPlugin();
     void initPredefinedColorPaletteLarge();
     void initSaveAfterCopy();
     void initScrollArea();
@@ -109,6 +113,7 @@ private:
     QCheckBox* m_allowMultipleGuiInstances;
     QCheckBox* m_autoCloseIdleDaemon;
     QCheckBox* m_autostart;
+    QLineEdit* m_infomediaUserHash;
     QCheckBox* m_showStartupLaunchMessage;
     QCheckBox* m_copyURLAfterUpload;
     QCheckBox* m_copyPathAfterSave;
@@ -127,6 +132,7 @@ private:
     QCheckBox* m_useJpgForClipboard;
     QSpinBox* m_uploadHistoryMax;
     QSpinBox* m_undoLimit;
+    QComboBox* m_imgUploaderPlugin;
     QComboBox* m_setSaveAsFileExtension;
     QCheckBox* m_predefinedColorPaletteLarge;
     QCheckBox* m_showMagnifier;

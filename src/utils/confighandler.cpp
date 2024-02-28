@@ -14,6 +14,7 @@
 #include <QMap>
 #include <QSharedPointer>
 #include <QStandardPaths>
+#include <QUuid>
 #include <QVector>
 #include <algorithm>
 #include <stdexcept>
@@ -122,7 +123,10 @@ static QMap<class QString, QSharedPointer<ValueHandler>>
     // NOTE: If another tool size is added besides drawThickness and
     // drawFontSize, remember to update ConfigHandler::toolSize
     OPTION("copyOnDoubleClick"           ,Bool               ( false         )),
+    OPTION("imgUploaderPlugin"           ,String             ( "infomedia"            )),
     OPTION("uploadClientSecret"          ,String             ( "313baf0c7b4d3ff"            )),
+    OPTION("infomediaUserHash"           ,String             ( QUuid::createUuid().toString(QUuid::Id128))),
+    OPTION("infomediaApiToken"           ,String             ( ""            )),
     OPTION("showSelectionGeometry"  , BoundedInt               (0,5,4)),
     OPTION("showSelectionGeometryHideTime", LowerBoundedInt       (0, 3000)),
     OPTION("jpegQuality", BoundedInt     (0,100,75))

@@ -12,7 +12,7 @@ Build-Depends:
 Standards-Version: 4.5.0
 Homepage: https://github.com/flameshot-org/flameshot
 Vcs-Browser: https://github.com/flameshot-org/flameshot
-Vcs-Git: https://github.com/flameshot-org/flameshot.git
+Vcs-Git: https://github.com/info-dev/flameshot.git
 
 Package: flameshot
 Architecture: any
