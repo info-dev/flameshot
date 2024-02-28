@@ -5,13 +5,13 @@ on:
     branches:
       - master
     paths-ignore:
-      - 'README.md'
-      - 'LICENSE'
+      - "README.md"
+      - "LICENSE"
 
   pull_request:
     paths-ignore:
-      - 'README.md'
-      - 'LICENSE'
+      - "README.md"
+      - "LICENSE"
 
 env:
   PRODUCT: flameshot
@@ -32,55 +32,15 @@ jobs:
       fail-fast: false
       matrix:
         dist:
-          - {
-              name: debian-10,
-              os: debian,
-              symbol: buster,
-              arch: amd64
-            }
-          - {
-              name: debian-10,
-              os: debian,
-              symbol: buster,
-              arch: arm64
-            }
-          - {
-              name: debian-10,
-              os: debian,
-              symbol: buster,
-              arch: armhf
-            }
-          - {
-              name: debian-11,
-              os: debian,
-              symbol: bullseye,
-              arch: amd64
-            }
-          - {
-              name: debian-11,
-              os: debian,
-              symbol: bullseye,
-              arch: arm64
-            }
-          - {
-              name: debian-11,
-              os: debian,
-              symbol: bullseye,
-              arch: armhf
-            }
-          - {
-              name: ubuntu-20.04,
-              os: ubuntu,
-              symbol: focal,
-              arch: amd64
-            }
-          - {
-              name: ubuntu-22.04,
-              os: ubuntu,
-              symbol: jammy,
-              arch: amd64
-            }
- 
+          - { name: debian-10, os: debian, symbol: buster, arch: amd64 }
+          - { name: debian-10, os: debian, symbol: buster, arch: arm64 }
+          - { name: debian-10, os: debian, symbol: buster, arch: armhf }
+          - { name: debian-11, os: debian, symbol: bullseye, arch: amd64 }
+          - { name: debian-11, os: debian, symbol: bullseye, arch: arm64 }
+          - { name: debian-11, os: debian, symbol: bullseye, arch: armhf }
+          - { name: ubuntu-20.04, os: ubuntu, symbol: focal, arch: amd64 }
+          - { name: ubuntu-22.04, os: ubuntu, symbol: jammy, arch: amd64 }
+
     steps:
       - name: Enable Docker Experimental Features
         run: |
@@ -219,23 +179,13 @@ jobs:
       fail-fast: false
       matrix:
         dist:
-          - {
-              name: fedora-35,
-              os: fedora,
-              symbol: 35,
-              arch: x86_64
-            }
-          - {
-              name: fedora-36,
-              os: fedora,
-              symbol: 36,
-              arch: x86_64
-            }
+          - { name: fedora-35, os: fedora, symbol: 35, arch: x86_64 }
+          - { name: fedora-36, os: fedora, symbol: 36, arch: x86_64 }
           - {
               name: opensuse-leap-15.2,
               os: opensuse-leap,
               symbol: 15.2,
-              arch: x86_64
+              arch: x86_64,
             }
     steps:
       - name: Checkout Source code
@@ -326,7 +276,7 @@ jobs:
           path: |
             ${{ github.workspace }}/build/${{ env.PRODUCT }}-*-lp${{ matrix.dist.symbol }}.${{ matrix.dist.arch }}.rpm
             ${{ github.workspace }}/build/${{ env.PRODUCT }}-*-lp${{ matrix.dist.symbol }}.${{ matrix.dist.arch }}.rpm.sha256sum
-   appimage-pack:
+  appimage-pack:
     name: Build appimage on ${{ matrix.config.name }}
     runs-on: ubuntu-22.04
     strategy:
@@ -338,7 +288,7 @@ jobs:
               os: ubuntu,
               symbol: focal,
               arch: amd64,
-              image_repo: flameshotorg/ci-building-images
+              image_repo: flameshotorg/ci-building-images,
             }
     container:
       image: ${{ matrix.config.image_repo }}:${{ matrix.config.os }}-${{ matrix.config.symbol }}
@@ -400,9 +350,9 @@ jobs:
             jq
 
       - name: Get go-appimage tool
-      # Will not use linuxdeployqt anymore, because it suopprts currently still-supported mainstream distribution,
-      # which is glibc 2.23. For more information, please see https://github.com/probonopd/linuxdeployqt/issues/340.
-      # Will try new tool https://github.com/probonopd/go-appimage written in golang by probonopd.
+        # Will not use linuxdeployqt anymore, because it suopprts currently still-supported mainstream distribution,
+        # which is glibc 2.23. For more information, please see https://github.com/probonopd/linuxdeployqt/issues/340.
+        # Will try new tool https://github.com/probonopd/go-appimage written in golang by probonopd.
         run: |
           wget $(curl https://api.github.com/repos/probonopd/go-appimage/releases | jq -r '.[] | select(.tag_name == "continuous") | .assets[] | select((.name | endswith("x86_64.AppImage")) and (.name | contains("appimagetool"))) | .browser_download_url') -O appimagetool
 
@@ -420,7 +370,7 @@ jobs:
           make -j$(nproc) DESTDIR=${APPIMAGE_DST_PATH} install
 
           $GITHUB_WORKSPACE/appimagetool -s deploy "${APPIMAGE_DST_PATH}/usr/share/applications/org.flameshot.Flameshot.desktop"
-          
+
           mkdir -p ${APPIMAGE_DST_PATH}/usr/plugins/platforminputcontexts
           cp \
             /usr/lib/x86_64-linux-gnu/qt5/plugins/platforminputcontexts/libfcitxplatforminputcontextplugin.so \
@@ -439,7 +389,6 @@ jobs:
 
           VERSION=${VERSION} $GITHUB_WORKSPACE/appimagetool "${APPIMAGE_DST_PATH}"
           mv $GITHUB_WORKSPACE/Flameshot-${VERSION}-x86_64.AppImage $GITHUB_WORKSPACE/Flameshot-${VERSION}.x86_64.AppImage
-
 
       - name: SHA256Sum of appimage package(daily build)
         run: |
@@ -557,7 +506,7 @@ jobs:
       - name: Packaging snap
         uses: snapcore/action-build@v1
         id: snapcraft
-        with: 
+        with:
           snapcraft-args: --enable-experimental-extensions
       - name: Rename snap name
         shell: bash
